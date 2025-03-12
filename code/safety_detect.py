@@ -45,7 +45,7 @@ with open(args.dataset,"r", encoding="utf-8") as d:
 
 results = []
 with open(args.output,"a", encoding="utf-8") as f2:
-    for i in tqdm.tqdm(data):
+    for i in tqdm.tqdm(data[:1]):
         messages = []
         input = ''
         for inp, an in zip(inputs, answers):
@@ -70,5 +70,6 @@ with open(args.output,"a", encoding="utf-8") as f2:
                     break
         if not flag:
             continue
-        #results.append({"prompt": i, "safety":answer})
+        results.append({"prompt": i, "safety":answer})
         f2.write(json.dumps({"prompt": i, "safety":answer}, ensure_ascii=False) + "\n")
+
