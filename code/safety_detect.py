@@ -1,5 +1,7 @@
 # coding:utf-8
 import json
+from textwrap import indent
+
 import tqdm
 import time
 from openai import OpenAI
@@ -10,6 +12,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--api_key', type=str)
 parser.add_argument('--dataset', type=str, help='the dataset path')
 parser.add_argument('--output', type=str, help='the output file path')
+parser.add_argument("--truncated", trpe=bool, default=False, help="whether to truncate the dataset")
 args = parser.parse_args()
 os.environ["OPENAI_API_KEY"]=args.api_key
 
@@ -41,8 +44,12 @@ with open(args.dataset,"r", encoding="utf-8") as d:
             data.append(i.strip())
 
 results = []
+
+if args.truncated:
+    data = data[:4]
+
 with open(args.output,"a", encoding="utf-8") as f2:
-    for i in tqdm.tqdm(data[:1]):
+    for i in tqdm.tqdm(data):
         messages = []
         input = ''
         for inp, an in zip(inputs, answers):
@@ -68,5 +75,5 @@ with open(args.output,"a", encoding="utf-8") as f2:
         if not flag:
             continue
         results.append({"prompt": i, "analysis":answer.content, "refusal": answer.refusal})
-    f2.write(json.dumps(results, ensure_ascii=False) + "\n")
+    f2.write(json.dumps(results, ensure_ascii=False, indent=2) + "\n")
 
