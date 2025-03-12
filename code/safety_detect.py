@@ -72,8 +72,3 @@ with open(args.output,"a", encoding="utf-8") as f2:
             continue
         #results.append({"prompt": i, "safety":answer})
         f2.write(json.dumps({"prompt": i, "safety":answer}, ensure_ascii=False) + "\n")
-
-<<<<<<< HEAD
-=======
-
->>>>>>> parent of bcd2611 (change safety_detect.py)
