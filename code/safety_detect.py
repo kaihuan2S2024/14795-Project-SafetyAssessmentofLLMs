@@ -12,7 +12,7 @@ parser = argparse.ArgumentParser()
 parser.add_argument('--api_key', type=str)
 parser.add_argument('--dataset', type=str, help='the dataset path')
 parser.add_argument('--output', type=str, help='the output file path')
-parser.add_argument("--truncated", trpe=bool, default=False, help="whether to truncate the dataset")
+parser.add_argument("--truncated", type=bool, default=False, help="whether to truncate the dataset")
 args = parser.parse_args()
 os.environ["OPENAI_API_KEY"]=args.api_key
 
