@@ -16,7 +16,6 @@ model_default = {
     "claude": "claude-3-7-sonnet-20250219",
     "deepseek":"deepseek-chat",
     "qwen": "qwen-turbo-latest",
-    "grok2": "grok-2-latest",
+    "grok": "grok-2-latest",
     "mistral": "mistral-7b-latest"
-
 }
