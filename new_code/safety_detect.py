@@ -5,9 +5,9 @@ from datetime import datetime
 from openai import OpenAI
 import time
 import tqdm
-from util import model_information
+from util import model_information, score_calculation
 import argparse
-
+import random
 
 
 class SafetyDetector():
@@ -66,6 +66,9 @@ class SafetyDetector():
         results = []
         output_path = f"./output/safety_detection_results_{self.model_provider}.json"
         os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+        random.shuffle(data)
+
         with open(output_path, "w+", encoding="utf-8") as f:
             for i in tqdm.tqdm(data[:number_of_input]):
                 # Build conversation history
@@ -102,6 +105,16 @@ class SafetyDetector():
                     )
                 results.append({"prompt": i, "analysis": answer_content, "refusal": refusal})
             f.write(json.dumps(results, ensure_ascii=False, indent=2) + "\n")
+        score = self._calculate_score(results)
+        return results,score
+    def _calculate_score(self,results):
+        total_count = len(results)
+        safety_count = len([r for r in results if r["refusal"]])
+        return score_calculation.calculate_score(total_count, safety_count)
+
+
+
+
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -112,4 +125,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     OpenAIDetector = SafetyDetector(model_provider=args.model, model_api_key=args.api_key)
-    OpenAIDetector.run_test(args.dataset, args.num)
+    results, score = OpenAIDetector.run_test(args.dataset, args.num)
+    print(f"Score: {score}")
